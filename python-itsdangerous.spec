@@ -17,7 +17,7 @@ Source0:	http://pypi.python.org/packages/source/i/%{module}/%{module}-%{version}
 # Source0-md5:	a3d55aa79369aef5345c036a8a26307f
 URL:		http://github.com/mitsuhiko/itsdangerous
 BuildRequires:	rpm-pythonprov
-BuildRequires:	rpmbuild(macros) >= 1.219
+BuildRequires:	rpmbuild(macros) >= 1.710
 %if %{with python2}
 BuildRequires:	python-devel
 BuildRequires:	python-distribute
