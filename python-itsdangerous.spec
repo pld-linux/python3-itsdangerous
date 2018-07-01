@@ -10,7 +10,7 @@ Summary:	Various helpers to pass trusted data to untrusted environments and back
 Summary(pl.UTF-8):	Wspomaganie przekazywania danych do i z niezaufanych środowisk
 Name:		python-%{module}
 Version:	0.24
-Release:	7
+Release:	8
 License:	BSD
 Group:		Libraries/Python
 #Source0Download: https://pypi.python.org/simple/itsdangerous
