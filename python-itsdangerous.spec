@@ -9,13 +9,13 @@
 Summary:	Various helpers to pass trusted data to untrusted environments and back
 Summary(pl.UTF-8):	Wspomaganie przekazywania danych do i z niezaufanych środowisk
 Name:		python-%{module}
-Version:	0.24
-Release:	8
+Version:	1.1.0
+Release:	1
 License:	BSD
 Group:		Libraries/Python
 #Source0Download: https://pypi.python.org/simple/itsdangerous
-Source0:	http://pypi.python.org/packages/source/i/itsdangerous/%{module}-%{version}.tar.gz
-# Source0-md5:	a3d55aa79369aef5345c036a8a26307f
+Source0:	https://pypi.python.org/packages/source/i/itsdangerous/%{module}-%{version}.tar.gz
+# Source0-md5:	9b7f5afa7f1e3acfb7786eeca3d99307
 URL:		http://github.com/mitsuhiko/itsdangerous
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.710
@@ -100,8 +100,8 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with python2}
 %files
 %defattr(644,root,root,755)
-%doc CHANGES LICENSE README
-%{py_sitescriptdir}/itsdangerous.py[co]
+%doc CHANGES.rst LICENSE.rst README.rst
+%{py_sitescriptdir}/itsdangerous
 %if "%{py_ver}" > "2.4"
 %{py_sitescriptdir}/itsdangerous-%{version}-py*.egg-info
 %endif
@@ -110,9 +110,8 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with python3}
 %files -n python3-%{module}
 %defattr(644,root,root,755)
-%doc CHANGES LICENSE README
-%{py3_sitescriptdir}/itsdangerous.py
-%{py3_sitescriptdir}/__pycache__/itsdangerous.cpython-*.py[co]
+%doc CHANGES.rst LICENSE.rst README.rst
+%{py3_sitescriptdir}/itsdangerous
 %{py3_sitescriptdir}/itsdangerous-%{version}-py*.egg-info
 %endif
 
