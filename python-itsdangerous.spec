@@ -18,17 +18,28 @@ Source0:	https://pypi.python.org/packages/source/i/itsdangerous/%{module}-%{vers
 # Source0-md5:	9b7f5afa7f1e3acfb7786eeca3d99307
 URL:		http://github.com/mitsuhiko/itsdangerous
 BuildRequires:	rpm-pythonprov
-BuildRequires:	rpmbuild(macros) >= 1.710
+BuildRequires:	rpmbuild(macros) >= 1.714
 %if %{with python2}
-BuildRequires:	python-devel >= 2
+BuildRequires:	python-modules >= 1:2.7
 BuildRequires:	python-setuptools
+%if %{with tests}
+BuildRequires:	python-freezegun
+BuildRequires:	python-pytest
+%endif
 %endif
 %if %{with python3}
-BuildRequires:	python3-devel >= 1:3.2
-BuildRequires:	python3-modules >= 1:3.2
+BuildRequires:	python3-modules >= 1:3.4
 BuildRequires:	python3-setuptools
+%if %{with tests}
+BuildRequires:	python3-freezegun
+BuildRequires:	python3-pytest
 %endif
-Requires:	python-modules >= 2
+%endif
+%if %{with doc}
+BuildRequires:	python3-pallets-sphinx-themes >= 1.1.0
+BuildRequires:	sphinx-pdg-3 >= 1.8.0
+%endif
+Requires:	python-modules >= 1:2.7
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -44,7 +55,7 @@ pobierania ich w sposób bezpieczny.
 Summary:	Various helpers to pass data to untrusted environments and to get it back safe and sound
 Summary(pl.UTF-8):	Wspomaganie przekazywania danych do i z niebezpiecznych środowisk
 Group:		Libraries/Python
-Requires:	python3-modules >= 1:3.2
+Requires:	python3-modules >= 1:3.4
 
 %description -n python3-%{module}
 Various helpers to pass data to untrusted environments and to get it
@@ -70,14 +81,27 @@ Dokumentacja do moduły Pythona itsdangerous.
 
 %build
 %if %{with python2}
-%py_build %{?with_tests:test}
+%py_build
+
+%if %{with tests}
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 \
+PYTHONPATH=$(pwd)/src \
+%{__python} -m pytest tests
+%endif
 %endif
 
 %if %{with python3}
-%py3_build %{?with_tests:test}
+%py3_build
+
+%if %{with tests}
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 \
+PYTHONPATH=$(pwd)/src \
+%{__python3} -m pytest tests
+%endif
 %endif
 
 %if %{with doc}
+PYTHONPATH=$(pwd)/src \
 %{__make} -C docs html
 %endif
 
@@ -102,9 +126,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc CHANGES.rst LICENSE.rst README.rst
 %{py_sitescriptdir}/itsdangerous
-%if "%{py_ver}" > "2.4"
 %{py_sitescriptdir}/itsdangerous-%{version}-py*.egg-info
-%endif
 %endif
 
 %if %{with python3}
