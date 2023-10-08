@@ -7,27 +7,30 @@
 Summary:	Various helpers to pass trusted data to untrusted environments and back
 Summary(pl.UTF-8):	Wspomaganie przekazywania danych do i z niezaufanych środowisk
 Name:		python3-%{module}
-Version:	2.0.1
-Release:	3
+Version:	2.1.2
+Release:	1
 License:	BSD
 Group:		Libraries/Python
-#Source0Download: https://pypi.python.org/simple/itsdangerous
-Source0:	https://pypi.python.org/packages/source/i/itsdangerous/%{module}-%{version}.tar.gz
-# Source0-md5:	996b9763d1b4bd0edd6eb86f0a490629
+#Source0Download: https://pypi.org/simple/itsdangerous
+Source0:	https://files.pythonhosted.org/packages/source/i/itsdangerous/%{module}-%{version}.tar.gz
+# Source0-md5:	c1bc730ddf53b8374eaa823f24eb6438
 URL:		http://github.com/mitsuhiko/itsdangerous
-BuildRequires:	rpm-pythonprov
-BuildRequires:	rpmbuild(macros) >= 1.714
-BuildRequires:	python3-modules >= 1:3.6
+BuildRequires:	python3-modules >= 1:3.7
 BuildRequires:	python3-setuptools
 %if %{with tests}
+# TODO: >= 1.1.0
 BuildRequires:	python3-freezegun
-BuildRequires:	python3-pytest
+BuildRequires:	python3-pytest >= 7.0.1
 %endif
+BuildRequires:	rpm-pythonprov
+BuildRequires:	rpmbuild(macros) >= 1.714
 %if %{with doc}
-BuildRequires:	python3-pallets-sphinx-themes >= 1.1.0
-BuildRequires:	sphinx-pdg-3 >= 1.8.0
+BuildRequires:	python3-pallets-sphinx-themes >= 2.0.2
+BuildRequires:	python3-sphinx_issues >= 3.0.1
+BuildRequires:	python3-sphinxcontrib-log-cabinet >= 1.0.1
+BuildRequires:	sphinx-pdg-3 >= 4.4.0
 %endif
-Requires:	python-modules >= 1:2.7
+Requires:	python3-modules >= 1:3.7
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -64,7 +67,8 @@ PYTHONPATH=$(pwd)/src \
 
 %if %{with doc}
 PYTHONPATH=$(pwd)/src \
-%{__make} -C docs html
+%{__make} -C docs html \
+	SPHINXBUILD=sphinx-build-3
 %endif
 
 %install
