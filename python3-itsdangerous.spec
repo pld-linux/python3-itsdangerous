@@ -7,16 +7,17 @@
 Summary:	Various helpers to pass trusted data to untrusted environments and back
 Summary(pl.UTF-8):	Wspomaganie przekazywania danych do i z niezaufanych środowisk
 Name:		python3-%{module}
-Version:	2.1.2
-Release:	3
+Version:	2.2.0
+Release:	1
 License:	BSD
 Group:		Libraries/Python
 #Source0Download: https://pypi.org/simple/itsdangerous
 Source0:	https://files.pythonhosted.org/packages/source/i/itsdangerous/%{module}-%{version}.tar.gz
-# Source0-md5:	c1bc730ddf53b8374eaa823f24eb6438
+# Source0-md5:	a901babde35694c3577f7655010cd380
 URL:		http://github.com/mitsuhiko/itsdangerous
+BuildRequires:	python3-build
+BuildRequires:	python3-installer
 BuildRequires:	python3-modules >= 1:3.7
-BuildRequires:	python3-setuptools
 %if %{with tests}
 # TODO: >= 1.1.0
 BuildRequires:	python3-freezegun
@@ -57,16 +58,19 @@ Dokumentacja do moduły Pythona itsdangerous.
 %setup -q -n %{module}-%{version}
 
 %build
-%py3_build
+%py3_build_pyproject
 
 %if %{with tests}
+%{__python3} -m zipfile -e build-3/*.whl build-3-test
+# use explicit plugins list for reliable builds (delete PYTEST_PLUGINS if empty)
 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 \
-PYTHONPATH=$(pwd)/src \
-%{__python3} -m pytest tests
+PYTEST_PLUGINS= \
+%{__python3} -m pytest -o pythonpath="$PWD/build-3-test" tests
 %endif
 
 %if %{with doc}
-PYTHONPATH=$(pwd)/src \
+%{__python3} -m zipfile -e build-3/*.whl build-3-doc
+PYTHONPATH=$(pwd)/build-3-doc \
 %{__make} -C docs html \
 	SPHINXBUILD=sphinx-build-3
 %endif
@@ -74,16 +78,16 @@ PYTHONPATH=$(pwd)/src \
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%py3_install
+%py3_install_pyproject
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc CHANGES.rst LICENSE.rst README.rst
+%doc CHANGES.rst LICENSE.txt README.md
 %{py3_sitescriptdir}/itsdangerous
-%{py3_sitescriptdir}/itsdangerous-%{version}-py*.egg-info
+%{py3_sitescriptdir}/itsdangerous-%{version}.dist-info
 
 %if %{with doc}
 %files apidocs
